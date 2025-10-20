@@ -25,6 +25,9 @@ public class ProductService {
     public Product create(Product product){
         productRepository.findByNameIgnoreCase(product.getName())
                 .ifPresent(product1 -> {throw new IllegalArgumentException("Product Name Already exists");});
+        if(product.getStock()<0){
+            throw new IllegalArgumentException("Stock cannot be zero and negative");
+        }
         return productRepository.save(product);
     }
     @Transactional(readOnly = true)
