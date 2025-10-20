@@ -1,6 +1,7 @@
 package com.muhammetakduman.order_inventory.controller;
 
 
+import com.muhammetakduman.order_inventory.dto.order.ApiResponse;
 import com.muhammetakduman.order_inventory.model.product.Product;
 import com.muhammetakduman.order_inventory.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -10,32 +11,39 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
+// ProductController.java
 @RestController
 @RequestMapping("/api/products")
 @RequiredArgsConstructor
 public class ProductController {
 
     private final ProductService productService;
-    
-    @GetMapping
-    public ResponseEntity<List<Product>> getAll(){
-        return ResponseEntity.ok(productService.getAll());
-    }
+
     @GetMapping("/{id}")
-    public ResponseEntity<Product> get(@PathVariable UUID id) {
-        return ResponseEntity.ok(productService.getById(id));
+    public ResponseEntity<ApiResponse<Product>> get(@PathVariable UUID id) {
+        Product product = productService.getById(id);
+        return ResponseEntity.ok(ApiResponse.ok(product));
     }
-    @PostMapping
-    public ResponseEntity<Product> create(@RequestBody Product product){
-        return ResponseEntity.ok(productService.create(product));
-    }
+
     @PostMapping("/{id}/decrease")
-    public ResponseEntity<Void> decreaseStock(
+    public ResponseEntity<ApiResponse<Product>> decreaseStock(
             @PathVariable UUID id,
             @RequestParam int quantity
     ) {
-        productService.decreaseStock(id, quantity);
-        return ResponseEntity.noContent().build();
+        Product updated = productService.decreaseStock(id, quantity);
+        return ResponseEntity.ok(ApiResponse.ok(updated));
     }
 
+    @PostMapping
+    public ResponseEntity<ApiResponse<Product>> create(@RequestBody Product product) {
+        Product created = productService.create(product);
+        return ResponseEntity.ok(ApiResponse.ok(created));
+    }
+
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<Product>>> getAll() {
+        List<Product> products = productService.getAll();
+        return ResponseEntity.ok(ApiResponse.ok(products));
+    }
 }
+

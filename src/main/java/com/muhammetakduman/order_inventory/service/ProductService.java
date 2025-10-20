@@ -1,6 +1,7 @@
 package com.muhammetakduman.order_inventory.service;
 
 
+import com.muhammetakduman.order_inventory.NotEnoughStockException;
 import com.muhammetakduman.order_inventory.model.product.Product;
 import com.muhammetakduman.order_inventory.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -31,12 +32,23 @@ public class ProductService {
         return productRepository.findById(id)
                 .orElseThrow(()-> new EntityNotFoundException("Product not found"));
     }
+    // ProductService.java
     @Transactional
-    public void decreaseStock(UUID id, int quantitiy){
-        Product product = getById(id);
-        if (product.getStock() < quantitiy)
-            throw new IllegalStateException("Not enough stock");
-        product.setStock(product.getStock() - quantitiy);
+    public Product decreaseStock(UUID id, int quantity) {
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Quantity must be > 0");
+        }
+
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found: " + id));
+
+        if (product.getStock() < quantity) {
+            throw new NotEnoughStockException("Not enough stock for product " + id);
+        }
+
+        product.setStock(product.getStock() - quantity);
         productRepository.save(product);
+        return product;
     }
+
 }
