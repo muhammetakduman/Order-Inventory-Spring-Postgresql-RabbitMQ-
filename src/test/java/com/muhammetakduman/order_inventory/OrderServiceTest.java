@@ -3,6 +3,8 @@ package com.muhammetakduman.order_inventory;
 import com.muhammetakduman.order_inventory.dto.order.OrderCreateRequest;
 import com.muhammetakduman.order_inventory.dto.order.OrderResponse;
 import com.muhammetakduman.order_inventory.mapper.OrderMapper;
+import com.muhammetakduman.order_inventory.messaging.dto.OrderCreatedEvent;
+import com.muhammetakduman.order_inventory.messaging.producer.OrderEventsProducer;
 import com.muhammetakduman.order_inventory.model.order.Order;
 import com.muhammetakduman.order_inventory.model.order.OrderItem;
 import com.muhammetakduman.order_inventory.model.product.Product;
@@ -27,13 +29,15 @@ class OrderServiceTest {
     private ProductRepository productRepository;
     private OrderMapper mapper;
     private OrderService orderService;
+    private OrderEventsProducer orderEventsProducer;
+    private OrderCreatedEvent orderCreatedEvent;
 
     @BeforeEach
     void setup() {
         orderRepository = mock(OrderRepository.class);
         productRepository = mock(ProductRepository.class);
         mapper = new OrderMapper();
-        orderService = new OrderService(orderRepository, productRepository, mapper /*, producer yok şimdilik */);
+        orderService = new OrderService(orderRepository, productRepository, mapper ,orderEventsProducer);
     }
 
     @Test
