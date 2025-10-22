@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -29,6 +30,10 @@ public class OrderController {
     public ResponseEntity<ApiResponse<OrderResponse>> get(@PathVariable UUID id) {
         OrderResponse out = orderService.get(id);
         return ResponseEntity.ok(ApiResponse.ok(out));
+    }
+    @GetMapping("/allOrder") ResponseEntity<ApiResponse<List<OrderResponse>>> getAllOrder(){
+        List<OrderResponse> orders = orderService.getAllOrder();
+        return ResponseEntity.ok(ApiResponse.ok(orders));
     }
 
 }

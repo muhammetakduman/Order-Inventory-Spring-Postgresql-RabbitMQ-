@@ -86,4 +86,15 @@ public class OrderService {
                 .orElseThrow(() -> new EntityNotFoundException("Order Not Found: " + id));
         return orderMapper.toResponse(order);
     }
+
+    @Transactional(readOnly = true)
+    public List<OrderResponse> getAllOrder(){
+        List<Order> orders = orderRepository.findAll();
+        List<OrderResponse> responseList = new ArrayList<>();
+        for (Order order : orders){
+            OrderResponse dto = orderMapper.toResponse(order);
+            responseList.add(dto);
+        }
+        return responseList;
+    }
 }
