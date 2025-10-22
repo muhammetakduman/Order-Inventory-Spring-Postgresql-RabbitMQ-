@@ -22,7 +22,7 @@ public class Order {
 
     @OneToMany(
             mappedBy = "order",
-            cascade = CascadeType.ALL,
+            cascade = CascadeType.ALL, fetch = FetchType.EAGER,
             orphanRemoval = true
     )
     private List<OrderItem> items = new ArrayList<>();
