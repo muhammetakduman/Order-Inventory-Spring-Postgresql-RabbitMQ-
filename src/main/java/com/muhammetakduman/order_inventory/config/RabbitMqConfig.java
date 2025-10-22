@@ -15,7 +15,7 @@ public class RabbitMqConfig {
     @Value("${app.rabbit.exchange}")
     private String exchangeName;
 
-    @Value("${app.rabit.queue}")
+    @Value("${app.rabbit.queue}")
     private String queueName;
 
     @Value("${app.rabbit.routing-key}")
